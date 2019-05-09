@@ -667,6 +667,17 @@ you can set any request headers. example is below.
   });
   close $fh;
 
+=head2 create_object_from_file($bucket, $key, $file_path, [ \%headers ]);
+
+Like L<create_object> except it handles creating a file handle for you.
+
+You can set any request headers. example is below.
+
+  $s3->create_object_from_file('you-bucket', 'public.jpg', '/path/to/content/to_upload.jpg', {
+      content_type => 'image/jpg',
+      'x-amz-acl' => 'public-read',
+  });
+
 =head2 get_object($bucket, $key, [ \%headers, \%furl_options ]);
 
 get object.
