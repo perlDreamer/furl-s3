@@ -4,7 +4,7 @@ use Class::Accessor::Lite;
 use XML::LibXML;
 use overload q{""} => \&stringify;
 
-Class::Accessor::Lite->mk_accessors(qw(code http_code http_status message request_id host_id));
+Class::Accessor::Lite->mk_accessors(qw(code http_code http_status message request_id host_id body));
 
 sub new {
     my( $class, $res ) = @_;
@@ -35,6 +35,7 @@ sub _parse_xml {
     my $message = $doc->findvalue('/Error/Message');
     my $request_id = $doc->findvalue('/Error/RequestId');
     my $host_id = $doc->findvalue('/Error/HostId');
+    $self->body( $xml );
     $self->code( $code );
     $self->message( $message );
     $self->request_id( $request_id );
@@ -44,3 +45,45 @@ sub _parse_xml {
 1;
 
 __END__
+
+=head1 NAME
+
+Furl::S3::Error - Error object for Furl::S3 responses.
+
+=head1 DESCRIPTION
+
+This little module parses any common error responses from Amazon S3's XML response and provides accessors for them.  It also stores the
+original message to help with advanced debugging.
+
+=head1 METHODS
+
+=head2 http_code
+
+HTTP response code from Amazon's S3 servers
+
+=head2 http_status
+
+HTTP status message from Amazon S3.
+
+=head2 code
+
+Amazon S3 specific error code
+
+=head2 message
+
+Amazon S3 specific error message
+
+=head2 request_id
+
+ID of the request as handled by the server (for tracking purposes)
+
+=head2 body
+
+The full, original XML message, for additional debugging.
+
+=head2 host_id
+
+Deprecated, no longer passed as part of S3's response.
+
+=cut
+
